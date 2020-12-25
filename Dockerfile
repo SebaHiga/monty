@@ -7,3 +7,5 @@ WORKDIR /opt/wazuh/build
 COPY ./ ../
 
 RUN cmake .. && make
+
+CMD ["./monty", "--loops", "50000", "--doors", "3", "--reveal", "1"]
