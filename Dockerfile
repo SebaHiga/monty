@@ -1,17 +1,9 @@
-FROM gcc:latest AS builder
+FROM ubuntu:latest
 
 RUN apt update
-RUN DEBIAN_FRONTEND=noninteractive apt install -y cmake
+RUN DEBIAN_FRONTEND=noninteractive apt install -y cmake gcc make g++
 
 WORKDIR /opt/wazuh/build
 COPY ./ ../
 
 RUN cmake .. && make
-RUN ctest
-
-FROM ubuntu:latest
-
-WORKDIR /opt/wazuh/challenge
-COPY --from=builder /opt/wazuh/build/waz .
-
-CMD [ "./waz" ]

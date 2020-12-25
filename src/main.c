@@ -103,7 +103,7 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
     float prob_changer = (float) total_winners_changer / loops;
     float prob_stayer = (float) total_winners_stayer / loops;
 
-    printf("Returned from thread:\nstayers: %f\nchangers: %f\n", prob_stayer,
+    printf("Returned from thread:\n** Stayers: %f **\n** Changers: %f **\n", prob_stayer,
     prob_changer);
 
     // Free resources
