@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13.4)
 
 project(waz)
 
-add_executable(waz src/main.c)
+add_executable(waz src/main.c src/simulator.c)
 
 target_include_directories(waz PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/inc
