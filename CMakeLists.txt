@@ -8,5 +8,10 @@ target_include_directories(waz PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/inc
 )
 
+target_link_libraries(waz
+    PRIVATE
+        pthread
+)
+
 #set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g")
-set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -Werror -O3")
+set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -O3")

@@ -3,6 +3,11 @@
 
 #include <stdlib.h>
 
+typedef struct{
+    size_t total_wins_changer;
+    size_t total_wins_stayer;
+} MontyCalcRet;
+
 /* 
     Simulation process to force calculte the probability of winning 
     a price in the Monty Hall door game
@@ -18,7 +23,21 @@ Return:
                     - double    The winning chance given the function arguments
                                 It returns -1 if it is not posible to perform the simulation
  */
-double monty_calculate_winning_chance(const size_t doors, const size_t reveal, size_t loops);
+MontyCalcRet monty_calculate_winning_chance(const size_t doors, const size_t reveal, size_t loops, int seed);
+
+
+/* Threading */
+typedef struct{
+    size_t doors;
+    size_t reveal;
+    size_t loops;
+    
+    int seed;
+
+    MontyCalcRet ret;
+} MontyParameters;
+
+void *monty_calculate_thread(void *args);
 
 
 #endif
