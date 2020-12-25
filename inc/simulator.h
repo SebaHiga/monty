@@ -23,7 +23,7 @@ Return:
                     - double    The winning chance given the function arguments
                                 It returns -1 if it is not posible to perform the simulation
  */
-MontyCalcRet monty_calculate_winning_chance(const size_t doors, const size_t reveal, size_t loops, int seed);
+MontyCalcRet monty_calculate_winning_chance(const size_t doors, const size_t reveal, size_t loops, unsigned int seed);
 
 
 /* Threading */
@@ -32,7 +32,7 @@ typedef struct{
     size_t reveal;
     size_t loops;
     
-    int seed;
+    unsigned int seed;
 
     MontyCalcRet ret;
 } MontyParameters;

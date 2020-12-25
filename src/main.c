@@ -7,6 +7,7 @@
 #include "common.h"
 #include "simulator.h"
 
+/* Print text on invalid usage */
 void print_help_and_exit() {
     printf("Usage: ./waz [--doors <n>] [--reveal <n>] [--loops <n>] [--threads <n>]\n");
     printf("--help          - show help and exit\n");
@@ -16,6 +17,7 @@ void print_help_and_exit() {
     printf("--threads <n>   - amount of threads to use 1 < n < 5\n");
     exit(0);
 }
+
 
 int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
 
@@ -55,7 +57,7 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
         }
     }
 
-    // Check
+    // Check command line arguments
     if ( doors == 0 || loops == 0 || doors - 1 <= reveal || n_threads > 4) {
         print_help_and_exit();
     }
@@ -64,7 +66,6 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
     printf("Using: \n\tLoops: %ld\n\tDoors: %ld\n\tReveal: %ld\n\n", loops, doors, reveal);
     // All arguments are ok for this program
 
-    // monty_calculate_winning_chance(doors, reveal, loops);
     // Instantiating base params
     MontyParameters params_base;
     params_base.doors = doors;
@@ -77,7 +78,7 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
     // // Use unix timestamp (seconds) as a random seed with uniform distribution
     srand((int) time(NULL));
 
-    // Create a threads
+    // Create a threads and it's parameters
     MontyParameters *arr_params = (MontyParameters *) malloc (n_threads * sizeof(MontyParameters));
     pthread_t *arr_threads = (pthread_t *) malloc (n_threads * sizeof(pthread_t));
 
@@ -90,18 +91,23 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
 
     printf("Threads are running!\n");
 
+    // Wait all threads to join
     for (size_t i = 0; i < n_threads; i++) {
-        pthread_join(arr_threads[i], NULL);
-        printf("thread finished\n");
+        int status = pthread_join(arr_threads[i], NULL);
+
+        printf("Thread finished with: %d\n", status);
         total_winners_changer += arr_params[i].ret.total_wins_changer;
         total_winners_stayer += arr_params[i].ret.total_wins_stayer;
     }
 
-    printf("Returned from thread:\nstayers: %ld\nchangers: %ld\n", total_winners_stayer,
-    total_winners_changer);
+    float prob_changer = (float) total_winners_changer / loops;
+    float prob_stayer = (float) total_winners_stayer / loops;
 
+    printf("Returned from thread:\nstayers: %f\nchangers: %f\n", prob_stayer,
+    prob_changer);
+
+    // Free resources
     free(arr_params);
     free(arr_threads);
-
-    return 0;
+    pthread_exit(NULL);
 }

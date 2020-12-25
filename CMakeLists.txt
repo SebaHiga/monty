@@ -14,4 +14,5 @@ target_link_libraries(waz
 )
 
 #set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -g")
-set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -O3")
+set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -fsanitize=address -Werror ")
+set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -fsanitize=leak ")

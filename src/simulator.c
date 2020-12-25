@@ -5,11 +5,11 @@
 
 #include "simulator.h"
 
-MontyCalcRet monty_calculate_winning_chance(const size_t doors, const size_t reveal, const size_t loops, int seed){
+MontyCalcRet monty_calculate_winning_chance(const size_t doors, const size_t reveal, const size_t loops, unsigned int seed){
     MontyCalcRet ret;
     ret.total_wins_changer = 0;
     ret.total_wins_stayer = 0;
-    int seed_d = seed;
+    unsigned int seed_d = seed;
 
     if (doors - 1 < reveal || loops == 0) return ret;
 
@@ -34,16 +34,16 @@ MontyCalcRet monty_calculate_winning_chance(const size_t doors, const size_t rev
 
         // printf("Setting winning index to %ld\nThe selected index is: %ld\n", index_price, index_stayer);
         
-        // clean doors putting all of them as empty
+        // clean doors, putting all of them as empty
         memset(door_array, 0, doors * sizeof(int));
         door_array[index_price] = 1;
 
-        // Reveal doors that are not the selected ones or that has the winning price
         size_t revealed = 0;
         size_t to_reveal = 0;
 
         while ( revealed < reveal ) {
-
+            
+            // Reveal doors that are not the selected ones or that have the winning price
             if ( door_array[to_reveal] == 0 
                 && !!!(to_reveal == index_stayer || to_reveal == index_price) ){
                     
@@ -55,20 +55,16 @@ MontyCalcRet monty_calculate_winning_chance(const size_t doors, const size_t rev
             to_reveal++;
         }
 
-        // debug printing array
-        // for(size_t i = 0; i < doors; i++){
-        //     printf("index:\t%ld\tvalue:\t%d\n", i, door_array[i]);
-        // }
-
         // Get new index to the switched door
-        size_t index_changer = rand_r(&seed_d) % doors;
+        size_t index_changer = 0;
         
+        // Iterate over the index changer until it is not the one that it was
+        // already selected or the door that was already revealed
         do {
             index_changer = rand_r(&seed_d) % doors;
         } while(index_changer == index_stayer
                 || door_array[index_changer] == -1);
 
-        // printf("Changer index is: %ld\n", index_changer);
 
         if (index_changer == index_price) {
             // printf("changer won\n");
@@ -79,16 +75,13 @@ MontyCalcRet monty_calculate_winning_chance(const size_t doors, const size_t rev
             total_wins_stayer++;
         }
 
-
         loop_count--;
     }
-
-    printf("stayer won: %ld times and changer won %ld times\n", total_wins_stayer, total_wins_changer);
 
     double prob_stayer = (double) total_wins_stayer / loops;
     double prob_changer = (double) total_wins_changer / loops;
 
-    printf("probability stayer: %f\t probability changer: %f\n", prob_stayer, prob_changer);
+    printf("Probability stayer: %f\tProbability changer: %f\n", prob_stayer, prob_changer);
 
     free(door_array);
 
@@ -106,7 +99,8 @@ void *monty_calculate_thread(void *args){
                                                       params->loops,
                                                       params->seed);
 
-    params->ret = ret;
+    params->ret.total_wins_changer = ret.total_wins_changer;
+    params->ret.total_wins_stayer = ret.total_wins_stayer;
 
     pthread_exit(NULL);
 }
