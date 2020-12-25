@@ -84,7 +84,7 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
 
     for (size_t i = 0; i < n_threads; i++) {
         arr_params[i] = params_base;
-        arr_params[i].seed = rand() % 2000;
+        arr_params[i].seed = rand();
 
         pthread_create(arr_threads + i, NULL, monty_calculate_thread, (void *) (arr_params + i));
     }
@@ -100,11 +100,15 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
         total_winners_stayer += arr_params[i].ret.total_wins_stayer;
     }
 
-    float prob_changer = (float) total_winners_changer / loops;
-    float prob_stayer = (float) total_winners_stayer / loops;
+    double prob_changer = (double) total_winners_changer / loops;
+    double prob_stayer = (double) total_winners_stayer / loops;
+    double predicted_for_changer = (double) (doors - 1) / (doors * (doors - reveal - 1));
 
     printf("Returned from thread:\n** Stayers: %f **\n** Changers: %f **\n", prob_stayer,
     prob_changer);
+
+    printf("The prediction for the Changer is: %f\nSimulation error: %f\n", predicted_for_changer,
+    predicted_for_changer - prob_changer);
 
     // Free resources
     free(arr_params);

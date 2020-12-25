@@ -37,6 +37,12 @@ typedef struct{
     MontyCalcRet ret;
 } MontyParameters;
 
+/* 
+
+    Use this function to start a thread. Also, use the structure MontyParameters defined 
+    to do the simulation. Remember to set a proper seed.
+
+*/
 void *monty_calculate_thread(void *args);
 
 

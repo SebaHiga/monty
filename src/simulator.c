@@ -67,11 +67,9 @@ MontyCalcRet monty_calculate_winning_chance(const size_t doors, const size_t rev
 
 
         if (index_changer == index_price) {
-            // printf("changer won\n");
             total_wins_changer++;
         } 
         if (index_stayer == index_price) {
-            // printf("stayer won\n");
             total_wins_stayer++;
         }
 
