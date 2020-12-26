@@ -7,28 +7,7 @@
 
 #include "common.h"
 #include "simulator.h"
-
-/* Print text on invalid usage */
-void print_help_and_exit() {
-    printf("Usage: ./waz [--doors <n>] [--reveal <n>] [--loops <n>] [--threads <n>]\n");
-    printf("--help          - show help and exit\n");
-    printf("--doors <n>     - amount of doors to simulate with  0 < n\n");
-    printf("--reveal <n>    - amount of doors to reveal 0 <= n < (doors - 1)\n");
-    printf("--loops <n>     - amount of loops to do to calculate probability 0 < n\n");
-    printf("--threads <n>   - amount of threads to use 1 < n < 5\n");
-    exit(0);
-}
-
-#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-#define PBWIDTH 60
-
-void printProgress(const double percentage) {
-    int val = (int) (percentage * 100);
-    int lpad = (int) (percentage * PBWIDTH);
-    int rpad = PBWIDTH - lpad;
-    printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
-    fflush(stdout);
-}
+#include "terminal_ui.h"
 
 int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
 
@@ -77,12 +56,6 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
     printf("Using: \n\tLoops: %ld\n\tDoors: %ld\n\tReveal: %ld\n\n", loops, doors, reveal);
     // All arguments are ok for this program
 
-    // Instantiating base params
-    MontyParameters params_base;
-    params_base.doors = doors;
-    params_base.reveal = reveal;
-    params_base.loops = loops / n_threads;
-
     size_t total_winners_stayer = 0;
     size_t total_winners_changer = 0;
 
@@ -102,18 +75,22 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
         return EXIT_FAILURE;
     }
 
+    // Initialize parameters and create threads
     for (size_t i = 0; i < n_threads; i++) {
-        arr_params[i] = params_base;
+        arr_params[i].doors = doors;
+        arr_params[i].reveal = reveal;
+        arr_params[i].loops = loops / n_threads;
         arr_params[i].seed = rand();
-        *(arr_params[i].loops_done) = 0;
+        arr_params[i].loops_done = 0;
 
         pthread_create(arr_threads + i, NULL, monty_calculate_thread, (void *) (arr_params + i));
     }
 
     printf("Threads are running!\n");
 
-    while ( *(arr_params[0].loops_done) < params_base.loops ){
-        printProgress((float) *(arr_params[0].loops_done) / params_base.loops);
+    // Print progress status bar using the loops done and the loops to be done.
+    while ( arr_params[n_threads-1].loops_done < arr_params[n_threads-1].loops ){
+        printProgress((double) arr_params[n_threads-1].loops_done / arr_params[n_threads-1].loops);
         usleep(50);
     }
     printProgress(1);
@@ -123,7 +100,7 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
     for (size_t i = 0; i < n_threads; i++) {
         int status = pthread_join(arr_threads[i], NULL);
 
-        printf("Thread finished with: %d\n", status);
+        printf("Thread finished with status: %d\n", status);
         total_winners_changer += arr_params[i].ret.total_wins_changer;
         total_winners_stayer += arr_params[i].ret.total_wins_stayer;
     }
@@ -141,5 +118,6 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
     // Free resources
     free(arr_params);
     free(arr_threads);
+
     pthread_exit(NULL);
 }

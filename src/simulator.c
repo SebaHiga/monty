@@ -29,10 +29,10 @@ MontyCalcRet monty_calculate_winning_chance(MontyParameters *params){
 
     size_t loop_count = params->loops;
 
-    *(params->loops_done) = 0;
+    params->loops_done = 0;
 
     while ( loop_count ) {
-        *(params->loops_done) += 1;
+        params->loops_done += 1;
 
         // Setup initial winning and selected positions
         size_t index_price = rand_r(&seed_d) % params->doors;
@@ -82,15 +82,10 @@ MontyCalcRet monty_calculate_winning_chance(MontyParameters *params){
         loop_count--;
     }
 
-    double prob_stayer = (double) total_wins_stayer / params->loops;
-    double prob_changer = (double) total_wins_changer / params->loops;
-
-    printf("Probability stayer: %f\tProbability changer: %f\n", prob_stayer, prob_changer);
-
-    free(door_array);
-
     params->ret.total_wins_changer = total_wins_changer;
     params->ret.total_wins_stayer = total_wins_stayer;
+
+    free(door_array);
 
     return ret;
 }

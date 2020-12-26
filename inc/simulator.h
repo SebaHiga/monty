@@ -3,28 +3,37 @@
 
 #include <stdlib.h>
 
-typedef struct{
-    size_t total_wins_changer;
-    size_t total_wins_stayer;
-} MontyCalcRet;
-
-/* Threading */
-typedef struct{
-    size_t doors;
-    size_t reveal;
-    size_t loops;
-
-    size_t *loops_done;
-    
-    unsigned int seed;
-
-    MontyCalcRet ret;
-} MontyParameters;
 
 /* 
     Simulation process to force calculte the probability of winning 
     a price in the Monty Hall door game
 */
+
+/* Type structures */
+
+/* This is the return type from the thread, it contains the total winners of both cases */
+
+typedef struct{
+    size_t total_wins_changer;
+    size_t total_wins_stayer;
+} MontyCalcRet;
+
+/*
+    This is the parameter structure, it contains the amount of doors, doors to reveal, loops and the return type.
+    Additionally it has the seed for rand_r() and the loops that the thread has done.
+*/
+
+typedef struct{
+    size_t doors;
+    size_t reveal;
+    size_t loops;
+
+    size_t loops_done;
+    
+    unsigned int seed;
+
+    MontyCalcRet ret;
+} MontyParameters;
 
 /* 
 This function takes:
