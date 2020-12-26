@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13.4)
 
 project(monty)
 
-add_executable(monty src/main.c src/simulator.c)
+add_executable(monty src/main.c src/simulator.c src/game.c)
 
 add_subdirectory("lib")
 

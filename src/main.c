@@ -4,10 +4,12 @@
 #include <pthread.h>
 #include <time.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #include "common.h"
 #include "simulator.h"
 #include "terminal_ui.h"
+#include "game.h"
 
 int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
 
@@ -25,6 +27,7 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
     size_t loops = 0;
     size_t reveal = 0;
     size_t n_threads = 1;
+    bool interactive = false;
 
     // Parse arguments
     for (int i = 0; i < argc; i += 2) {
@@ -41,6 +44,9 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
         else if (!strcmp(argv[i], "--threads") ){
             n_threads = atoi(argv[i+1]);
         }
+        else if (!strcmp(argv[i], "--interactive") ){
+            interactive = argv[i+1][0] == '1' ? true : false;
+        }
         else {
             printf ("**ERROR**: unrecognized flag: %s\n", argv[i]);
             print_help_and_exit();
@@ -55,6 +61,12 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
 
     printf("Using: \n\tLoops: %ld\n\tDoors: %ld\n\tReveal: %ld\n\n", loops, doors, reveal);
     // All arguments are ok for this program
+
+    // Start interactive mode and exit
+    if (interactive){
+        start_monty_game(doors, reveal);
+        return EXIT_SUCCESS;
+    } 
 
     size_t total_winners_stayer = 0;
     size_t total_winners_changer = 0;
