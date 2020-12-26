@@ -5,19 +5,19 @@
 
 #include "simulator.h"
 
-MontyCalcRet monty_calculate_winning_chance(const size_t doors, const size_t reveal, const size_t loops, unsigned int seed){
+MontyCalcRet monty_calculate_winning_chance(MontyParameters *params){
     MontyCalcRet ret;
     ret.total_wins_changer = 0;
     ret.total_wins_stayer = 0;
-    unsigned int seed_d = seed;
+    unsigned int seed_d = params->seed;
 
-    if (doors - 1 < reveal || loops == 0) return ret;
+    if (params->doors - 1 < params->reveal || params->loops == 0) return ret;
 
     /* Create dynamic door array with: -1 revealed
                                         0 is empty
                                         1 has the winning price
     */
-    int *door_array = (int*) malloc (doors * sizeof(int));{
+    int *door_array = (int*) malloc (params->doors * sizeof(int));
 
     if (door_array == NULL) {
         printf("ERROR: No memory left to allocate door array'n");
@@ -27,26 +27,27 @@ MontyCalcRet monty_calculate_winning_chance(const size_t doors, const size_t rev
     size_t total_wins_changer = 0;
     size_t total_wins_stayer = 0;
 
-    size_t loop_count = loops;
+    size_t loop_count = params->loops;
 
-    printf("Starting loops: %ld\n", loops);
+    *(params->loops_done) = 0;
 
     while ( loop_count ) {
+        *(params->loops_done) += 1;
 
         // Setup initial winning and selected positions
-        size_t index_price = rand_r(&seed_d) % doors;
-        size_t index_stayer = rand_r(&seed_d) % doors;
+        size_t index_price = rand_r(&seed_d) % params->doors;
+        size_t index_stayer = rand_r(&seed_d) % params->doors;
 
         // printf("Setting winning index to %ld\nThe selected index is: %ld\n", index_price, index_stayer);
         
         // clean doors, putting all of them as empty
-        memset(door_array, 0, doors * sizeof(int));
+        memset(door_array, 0, params->doors * sizeof(int));
         door_array[index_price] = 1;
 
         size_t revealed = 0;
         size_t to_reveal = 0;
 
-        while ( revealed < reveal ) {
+        while ( revealed < params->reveal ) {
             
             // Reveal doors that are not the selected ones or that have the winning price
             if ( door_array[to_reveal] == 0 
@@ -66,7 +67,7 @@ MontyCalcRet monty_calculate_winning_chance(const size_t doors, const size_t rev
         // Iterate over the index changer until it is not the one that it was
         // already selected or the door that was already revealed
         do {
-            index_changer = rand_r(&seed_d) % doors;
+            index_changer = rand_r(&seed_d) % params->doors;
         } while(index_changer == index_stayer
                 || door_array[index_changer] == -1);
 
@@ -81,29 +82,24 @@ MontyCalcRet monty_calculate_winning_chance(const size_t doors, const size_t rev
         loop_count--;
     }
 
-    double prob_stayer = (double) total_wins_stayer / loops;
-    double prob_changer = (double) total_wins_changer / loops;
+    double prob_stayer = (double) total_wins_stayer / params->loops;
+    double prob_changer = (double) total_wins_changer / params->loops;
 
     printf("Probability stayer: %f\tProbability changer: %f\n", prob_stayer, prob_changer);
 
     free(door_array);
 
-    ret.total_wins_changer = total_wins_changer;
-    ret.total_wins_stayer = total_wins_stayer;
+    params->ret.total_wins_changer = total_wins_changer;
+    params->ret.total_wins_stayer = total_wins_stayer;
 
     return ret;
 }
 
-void *monty_calculate_thread(void *args){
+void *monty_calculate_thread(void *args)
+{
     MontyParameters *params = (MontyParameters *) args;
 
-    MontyCalcRet ret = monty_calculate_winning_chance(params->doors,
-                                                      params->reveal,
-                                                      params->loops,
-                                                      params->seed);
-
-    params->ret.total_wins_changer = ret.total_wins_changer;
-    params->ret.total_wins_stayer = ret.total_wins_stayer;
+    monty_calculate_winning_chance(params);
 
     pthread_exit(NULL);
 }

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "common.h"
 #include "simulator.h"
@@ -18,6 +19,16 @@ void print_help_and_exit() {
     exit(0);
 }
 
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
+
+void printProgress(const double percentage) {
+    int val = (int) (percentage * 100);
+    int lpad = (int) (percentage * PBWIDTH);
+    int rpad = PBWIDTH - lpad;
+    printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
+    fflush(stdout);
+}
 
 int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
 
@@ -94,11 +105,19 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
     for (size_t i = 0; i < n_threads; i++) {
         arr_params[i] = params_base;
         arr_params[i].seed = rand();
+        *(arr_params[i].loops_done) = 0;
 
         pthread_create(arr_threads + i, NULL, monty_calculate_thread, (void *) (arr_params + i));
     }
 
     printf("Threads are running!\n");
+
+    while ( *(arr_params[0].loops_done) < params_base.loops ){
+        printProgress((float) *(arr_params[0].loops_done) / params_base.loops);
+        usleep(50);
+    }
+    printProgress(1);
+    printf("\n");
 
     // Wait all threads to join
     for (size_t i = 0; i < n_threads; i++) {
