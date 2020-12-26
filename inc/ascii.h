@@ -6,6 +6,8 @@ extern const char *ascii_doors_unrevealed[];
 extern const char *ascii_doors_revealed[];
 extern const char *ascii_doors_starred[];
 
+extern const char *ascii_monty_title;
+
 #define ASCII_NUMBER_PLACEHOLER "\t      %ld     \t"
 
 #endif

@@ -28,8 +28,8 @@ void start_monty_game(const size_t doors, const size_t reveal _MAYBE_UNUSED_){
 
     arr_doors[index_price] = MONTY_HAS_PRICE;
 
-    printf("The monty game\n");
-
+    // for (size_t i = 0; i < 6; i++) printf("%s", ascii_monty_title[i]);
+    printf("%s", ascii_monty_title);
     print_ascii_doors(arr_doors, doors);
 
     // for (size_t i = 0; i < doors; i++) printf("[%ld] ", i);
