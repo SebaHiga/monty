@@ -4,12 +4,14 @@
 
 #include "game.h"
 #include "common.h"
+#include "ascii.h"
 
 void start_monty_game(const size_t doors, const size_t reveal _MAYBE_UNUSED_){
     if (doors > MONTY_MAX_DOORS) {
         printf("The maximum amount of doors to use is %d!", MONTY_MAX_DOORS);
         return;
     }
+
 
     // // Use unix timestamp (seconds) as a random seed with uniform distribution
     srand((int) time(NULL));
@@ -28,7 +30,9 @@ void start_monty_game(const size_t doors, const size_t reveal _MAYBE_UNUSED_){
 
     printf("The monty game\n");
 
-    for (size_t i = 0; i < doors; i++) printf("[%ld] ", i);
+    print_ascii_doors(arr_doors, doors);
+
+    // for (size_t i = 0; i < doors; i++) printf("[%ld] ", i);
 
     size_t index_selected = get_door_from_user(arr_doors, doors);
 
@@ -46,13 +50,14 @@ void host_interact_post_select(host_behaviour host, int *arr_doors, const size_t
     // Temporal selected index
     size_t selected_tmp = selected;
 
-    print_monty_doors(arr_doors, doors);
 
     // This switch statement can be WAAAY clearer
     switch (host) {
         // Always reveals and asks to switch doors
         case NORMAL:{
             host_reveal_doors(arr_doors, doors, reveal);
+
+            print_ascii_doors(arr_doors, doors);
 
             if (ask_to_switch_doors()) {
                 selected_tmp = get_door_from_user(arr_doors, doors);
@@ -62,6 +67,8 @@ void host_interact_post_select(host_behaviour host, int *arr_doors, const size_t
         case MONTY_HELL:{
             if (selected_tmp == price) {
                 host_reveal_doors(arr_doors, doors, reveal);
+
+                print_ascii_doors(arr_doors, doors);
 
                 if (ask_to_switch_doors()) {
                     selected_tmp = get_door_from_user(arr_doors, doors);
@@ -74,6 +81,8 @@ void host_interact_post_select(host_behaviour host, int *arr_doors, const size_t
             if (selected_tmp != price) {
                 host_reveal_doors(arr_doors, doors, reveal);
 
+                print_ascii_doors(arr_doors, doors);
+
                 if (ask_to_switch_doors()) {
                     selected_tmp = get_door_from_user(arr_doors, doors);
                 }
@@ -82,14 +91,17 @@ void host_interact_post_select(host_behaviour host, int *arr_doors, const size_t
         }break;
     }
 
-    print_monty_doors(arr_doors, doors);
-
     if (selected_tmp == price){
         printf("\nYou won the game!\n");
+        arr_doors[selected_tmp] = MONTY_HAS_WON;
     }
     else {
         printf("\nYou didnt won\n");
+        arr_doors[selected_tmp] = MONTY_SHOW_VOID;
     }
+
+    print_ascii_doors(arr_doors, doors);
+
 }
 
 
@@ -165,4 +177,29 @@ bool ask_to_switch_doors(){
     scanf("%c", &YN);
 
     return YN == 'y' ? true : false;
+}
+
+
+void print_ascii_doors(int *arr_doors, const size_t doors){
+    for (size_t i = 0; i < doors; i++) {
+        printf(ASCII_NUMBER_PLACEHOLER, i);
+    }
+    printf("\n");
+    for(size_t row = 0; row < ascii_door_lines; row++){
+        for (size_t i = 0; i < doors; i++) {
+            if (arr_doors[i] == MONTY_DOOR_UNREVEALED) {
+                printf("\t%s\t", ascii_doors_unrevealed[row]);
+            }
+            else if (arr_doors[i] == MONTY_DOOR_REVEALED || arr_doors[i] == MONTY_SHOW_VOID) {
+                printf("\t%s\t", ascii_doors_revealed[row]);
+            }
+            else if (arr_doors[i] == MONTY_HAS_WON) {
+                printf("\t%s\t", ascii_doors_starred[row]);
+            }
+            else{
+                printf("\t%s\t", ascii_doors_unrevealed[row]);
+            }
+        }
+        printf("\n");
+    }
 }

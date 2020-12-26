@@ -24,7 +24,7 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
     argc--; argv++;
 
     size_t doors = 0;
-    size_t loops = 0;
+    size_t loops = 1;
     size_t reveal = 0;
     size_t n_threads = 1;
     bool interactive = false;

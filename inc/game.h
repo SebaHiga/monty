@@ -14,6 +14,7 @@
 #define MONTY_IS_SELECTED       2
 #define MONTY_HAS_PRICE         3
 #define MONTY_HAS_WON           4
+#define MONTY_SHOW_VOID         5
 
 #define REVEALED_DOOR   "[ ]"
 
@@ -37,6 +38,8 @@ void print_monty_doors(int *arr_doors, const size_t doors);
 size_t get_door_from_user(int *arr_doors, const size_t doors);
 
 bool ask_to_switch_doors();
+
+void print_ascii_doors(int *arr_doors, const size_t doors);
 
 #endif
 
