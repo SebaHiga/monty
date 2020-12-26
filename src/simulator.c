@@ -17,7 +17,12 @@ MontyCalcRet monty_calculate_winning_chance(const size_t doors, const size_t rev
                                         0 is empty
                                         1 has the winning price
     */
-    int *door_array = (int*) malloc (doors * sizeof(int));
+    int *door_array = (int*) malloc (doors * sizeof(int));{
+
+    if (door_array == NULL) {
+        printf("ERROR: No memory left to allocate door array'n");
+        return ret;
+    }
 
     size_t total_wins_changer = 0;
     size_t total_wins_stayer = 0;

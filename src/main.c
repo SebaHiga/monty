@@ -82,6 +82,15 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
     MontyParameters *arr_params = (MontyParameters *) malloc (n_threads * sizeof(MontyParameters));
     pthread_t *arr_threads = (pthread_t *) malloc (n_threads * sizeof(pthread_t));
 
+    if (arr_params == NULL){
+        printf("ERROR: no memory left to allocate parameters\n");
+        return EXIT_FAILURE;
+    }
+    if (arr_threads == NULL){
+        printf("ERROR: no memory left to allocate threads\n");
+        return EXIT_FAILURE;
+    }
+
     for (size_t i = 0; i < n_threads; i++) {
         arr_params[i] = params_base;
         arr_params[i].seed = rand();
@@ -104,8 +113,8 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
     double prob_stayer = (double) total_winners_stayer / loops;
     double predicted_for_changer = (double) (doors - 1) / (doors * (doors - reveal - 1));
 
-    printf("Returned from thread:\n** Stayers: %f **\n** Changers: %f **\n", prob_stayer,
-    prob_changer);
+    printf("** The probability to win with no door change: %f **\n", prob_stayer);
+    printf("** The probability to win with door change is: %f **\n", prob_changer);
 
     printf("The prediction for the Changer is: %f\nSimulation error: %f\n", predicted_for_changer,
     predicted_for_changer - prob_changer);
