@@ -12,7 +12,6 @@ void start_monty_game(const size_t doors, const size_t reveal _MAYBE_UNUSED_){
         return;
     }
 
-
     // // Use unix timestamp (seconds) as a random seed with uniform distribution
     srand((int) time(NULL));
 
@@ -28,11 +27,8 @@ void start_monty_game(const size_t doors, const size_t reveal _MAYBE_UNUSED_){
 
     arr_doors[index_price] = MONTY_HAS_PRICE;
 
-    // for (size_t i = 0; i < 6; i++) printf("%s", ascii_monty_title[i]);
     printf("%s", ascii_monty_title);
     print_ascii_doors(arr_doors, doors);
-
-    // for (size_t i = 0; i < doors; i++) printf("[%ld] ", i);
 
     size_t index_selected = get_door_from_user(arr_doors, doors);
 
@@ -110,7 +106,7 @@ void print_monty_host_type(const host_behaviour host) {
 
     switch (host) {
         case NORMAL:{
-            printf("normal");
+            printf("Normal");
         }break;
 
         case MONTY_HELL:{
@@ -140,20 +136,6 @@ void host_reveal_doors(int *arr_doors, const size_t doors _MAYBE_UNUSED_, const 
 
             index++;
         }
-}
-
-void print_monty_doors(int *arr_doors, const size_t doors){
-    for (size_t i = 0; i < doors; i++) {
-        if ( arr_doors[i] == MONTY_DOOR_REVEALED ) {
-            printf("[ ] ");
-        }
-        else if ( arr_doors[i] == MONTY_DOOR_UNREVEALED ) {
-            printf("[?] ");
-        }
-        else {
-            printf("[%ld] ", i);
-        }
-    }
 }
 
 size_t get_door_from_user(int *arr_doors, const size_t doors){
