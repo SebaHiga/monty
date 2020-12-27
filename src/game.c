@@ -88,7 +88,7 @@ void host_interact_post_select(host_behaviour host, int *arr_doors, const size_t
     }
 
     if (selected_tmp == price){
-        printf("\nYou won the game!\n");
+        printf("%s", win_message);
         arr_doors[selected_tmp] = MONTY_HAS_WON;
     }
     else {
