@@ -11,6 +11,8 @@
 #include "terminal_ui.h"
 #include "game.h"
 
+#define MAX_THREADS 4
+
 int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
 
     if ( argc < 7 ) {
@@ -54,7 +56,7 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
     }
 
     // Check command line arguments
-    if ( doors == 0 || loops == 0 || doors - 1 <= reveal || n_threads > 4) {
+    if ( doors == 0 || loops == 0 || doors - 1 <= reveal || n_threads > MAX_THREADS) {
         print_help_and_exit();
     }
 
