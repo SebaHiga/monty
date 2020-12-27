@@ -32,6 +32,7 @@ $ docker build -t monty .
 
 # Usage
 You can play with the executable with the following parameters:
+- interactive [1/0] : Start interactive mode and play the game as you were in television!
 - loops <N> : The amount of loops of simulations to do. The more, the better will be the precision but it will take more time.
 - doors <N> : The amount of doors that the game has.
 - reveal <N> : The amount of doors with goats to reveal after the player selects a door.
@@ -44,11 +45,22 @@ $ ./monty --loops 20000 --doors 100 --reveal 40 --threads 2
 
 # With Docker
 With the docker image the parameters are already defined in the dockerfile. To execute it you can do:
-```sh
-$ docker run monty
-```
-If you want to play with some parameters do the following:
+
 ```sh
 $ docker run -it wazuh ./monty --loops 5000000 --doors 100 --reveal 98 --threads 4
 ```
 
+# Play it!
+
+Play the Monty Hall game as you were in television with the flag **--interactive**.
+Use the same other flags but you are limited to use up to 6 doors (unless you have ultra hyper wide monitor heh).
+
+```sh
+$ ./monty --interactive 1 --doors 3 --reveal 1
+```
+
+To run it with docker use:
+
+```sh
+$ docker run -it wazuh
+```
