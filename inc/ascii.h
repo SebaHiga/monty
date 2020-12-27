@@ -8,6 +8,6 @@ extern const char *ascii_doors_starred[];
 
 extern const char *ascii_monty_title;
 extern const char *win_message;
-#define ASCII_NUMBER_PLACEHOLER "\t      %ld     \t"
+#define ASCII_NUMBER_PLACEHOLER "      %ld     \t"
 
 #endif

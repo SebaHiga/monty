@@ -92,7 +92,7 @@ void host_interact_post_select(host_behaviour host, int *arr_doors, const size_t
         arr_doors[selected_tmp] = MONTY_HAS_WON;
     }
     else {
-        printf("\nYou didnt won\n");
+        printf("\nYou lost :(\n");
         arr_doors[selected_tmp] = MONTY_SHOW_VOID;
     }
 
@@ -170,16 +170,16 @@ void print_ascii_doors(int *arr_doors, const size_t doors){
     for(size_t row = 0; row < ascii_door_lines; row++){
         for (size_t i = 0; i < doors; i++) {
             if (arr_doors[i] == MONTY_DOOR_UNREVEALED) {
-                printf("\t%s\t", ascii_doors_unrevealed[row]);
+                printf("%s\t", ascii_doors_unrevealed[row]);
             }
             else if (arr_doors[i] == MONTY_DOOR_REVEALED || arr_doors[i] == MONTY_SHOW_VOID) {
-                printf("\t%s\t", ascii_doors_revealed[row]);
+                printf("%s\t", ascii_doors_revealed[row]);
             }
             else if (arr_doors[i] == MONTY_HAS_WON) {
-                printf("\t%s\t", ascii_doors_starred[row]);
+                printf("%s\t", ascii_doors_starred[row]);
             }
             else{
-                printf("\t%s\t", ascii_doors_unrevealed[row]);
+                printf("%s\t", ascii_doors_unrevealed[row]);
             }
         }
         printf("\n");

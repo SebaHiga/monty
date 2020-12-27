@@ -1,7 +1,7 @@
 
 
-[![Wazuh](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwazuh.com%2Fwp-content%2Fuploads%2F2018%2F12%2Fwazuh_web_img_blog-full.png&f=1&nofb=1)](https://wazuh.com/)
 ![Monty](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2F_X5erR9LKUs%2Fmaxresdefault.jpg&f=1&nofb=1)
+[![Wazuh](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwazuh.com%2Fwp-content%2Fuploads%2F2018%2F12%2Fwazuh_web_img_blog-full.png&f=1&nofb=1)](https://wazuh.com/)
 
 # The Monty Hall problem
 The monty hall problem is a famous paradox and mathematical game. It's based on the American television game show called "Let's make a deal".
@@ -50,17 +50,39 @@ With the docker image the parameters are already defined in the dockerfile. To e
 $ docker run -it wazuh ./monty --loops 5000000 --doors 100 --reveal 98 --threads 4
 ```
 
+ __________ 	 __________ 	 __________ 	
+||         |	||         |	|  __  __  |	
+||         |	||         |	| |  ||  | |	
+||    A    |	||         |	| |  ||  | |	
+||___/_\___|	||         |	| |__||__| |	
+|| ',. ..' |	||         |	|  __  __()|	
+|| /.'^'.\ |	||)        |	| |  ||  | |	
+||/'     '\|	||         |	| |  ||  | |	
+||         |	||         |	| |  ||  | |	
+||         |	||         |	| |  ||  | |	
+||         |	||         |	| |__||__| |	
+||_________|	||_________|	|__________|	
+
 # Play it!
 
 Play the Monty Hall game as you were in television with the flag **--interactive**.
 Use the same other flags but you are limited to use up to 6 doors (unless you have ultra hyper wide monitor heh).
 
+The game implements some host behaviours, pay atention!
+* Normal: nothing special, it plays like in the television.
+* Angelic Monty: It tries to save you by asking you to change doors.
+* Monty Hell: The worst one. It **only** ask you to switch doors if you chose the correct one.
+
 ```sh
 $ ./monty --interactive 1 --doors 3 --reveal 1
 ```
 
-To run it with docker use:
-
+## Playing with docker
+To play this game with docker just run the following command after builing the image.
 ```sh
 $ docker run -it wazuh
+```
+### With custom scenario:
+```sh
+$ docker run -it wazuh ./monty --interactive 1 --doors 4 --reveal 1
 ```
