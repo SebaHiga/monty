@@ -1,14 +1,14 @@
-FROM ubuntu:latest AS builder
+FROM alpine:latest AS builder
 
-RUN apt update
-RUN DEBIAN_FRONTEND=noninteractive apt install -y cmake gcc make g++
+RUN apk update
+RUN apk add cmake gcc make g++
 
 WORKDIR /opt/wazuh/build
 COPY ./ ../
 
 RUN cmake .. && make
 
-FROM ubuntu:latest AS runtime
+FROM alpine:latest
 
 WORKDIR /opt/monty
 

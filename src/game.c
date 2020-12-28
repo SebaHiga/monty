@@ -102,7 +102,7 @@ void host_interact_post_select(host_behaviour host, int *arr_doors, const size_t
 
 
 void print_monty_host_type(const host_behaviour host) {
-    printf("The host type was: ");
+    printf("\nThe host type was: ");
 
     switch (host) {
         case NORMAL:{
@@ -141,11 +141,11 @@ void host_reveal_doors(int *arr_doors, const size_t doors _MAYBE_UNUSED_, const 
 size_t get_door_from_user(int *arr_doors, const size_t doors){
     size_t selected = 0;
 
-    printf("\nSelect a door: ");
+    printf("\n\rSelect a door\n");
     scanf("%zu", &selected);
 
     while (selected >= doors || arr_doors[selected] == MONTY_IS_SELECTED){
-        printf("\nPlease select a valid door: ");
+        printf("\n\rPlease select a valid door\n");
         scanf("%zu", &selected);
     }
 
@@ -155,7 +155,7 @@ size_t get_door_from_user(int *arr_doors, const size_t doors){
 bool ask_to_switch_doors(){
     char YN;
     while ( getchar() != '\n' );
-    printf("\nDo you want to switch doors? [y/n]: ");
+    printf("\nDo you want to switch doors? [y/n]\n");
     scanf("%c", &YN);
 
     return YN == 'y' ? true : false;
