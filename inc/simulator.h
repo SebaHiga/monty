@@ -28,8 +28,6 @@ typedef struct{
     size_t reveal;
     size_t loops;
 
-    size_t loops_done;
-    
     unsigned int seed;
 
     MontyCalcRet ret;

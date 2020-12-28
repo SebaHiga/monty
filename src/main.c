@@ -70,9 +70,6 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
         return EXIT_SUCCESS;
     } 
 
-    size_t total_winners_stayer = 0;
-    size_t total_winners_changer = 0;
-
     // // Use unix timestamp (seconds) as a random seed with uniform distribution
     srand((int) time(NULL));
 
@@ -89,13 +86,14 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
         return EXIT_FAILURE;
     }
 
+    size_t loop_divided = loops / n_threads;
+
     // Initialize parameters and create threads
     for (size_t i = 0; i < n_threads; i++) {
         arr_params[i].doors = doors;
         arr_params[i].reveal = reveal;
-        arr_params[i].loops = loops / n_threads;
+        arr_params[i].loops = loop_divided;
         arr_params[i].seed = rand();
-        arr_params[i].loops_done = 0;
 
         pthread_create(arr_threads + i, NULL, monty_calculate_thread, (void *) (arr_params + i));
     }
@@ -103,12 +101,20 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
     printf("Threads are running!\n");
 
     // Print progress status bar using the loops done and the loops to be done.
-    while ( arr_params[n_threads-1].loops_done < arr_params[n_threads-1].loops ){
-        printProgress((double) arr_params[n_threads-1].loops_done / arr_params[n_threads-1].loops);
+    while ( arr_params[n_threads-1].loops ){
+        size_t loops_done = loop_divided - arr_params[n_threads-1].loops;
+        double wins_switch = (double) arr_params[n_threads-1].ret.total_wins_changer / loops_done;
+
+        printProgress((double) loops_done / loop_divided);
+        printf("Estimation - switching doors: %lf%%", wins_switch * 100);
+        fflush(stdout);
         usleep(50);
     }
     printProgress(1);
     printf("\n");
+
+    size_t total_winners_stayer = 0;
+    size_t total_winners_changer = 0;
 
     // Wait all threads to join
     for (size_t i = 0; i < n_threads; i++) {
@@ -119,12 +125,12 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
         total_winners_stayer += arr_params[i].ret.total_wins_stayer;
     }
 
-    double prob_changer = (double) total_winners_changer / loops;
-    double prob_stayer = (double) total_winners_stayer / loops;
-    double predicted_for_changer = (double) (doors - 1) / (doors * (doors - reveal - 1));
+    double prob_changer = ((double) total_winners_changer / loops) * 100;
+    double prob_stayer = ((double) total_winners_stayer / loops) * 100;
+    double predicted_for_changer = ((double) (doors - 1) / (doors * (doors - reveal - 1))) * 100;
 
-    printf("** The probability to win with no door change: %f **\n", prob_stayer);
-    printf("** The probability to win with door change is: %f **\n", prob_changer);
+    printf("** The probability to win with no door change: %f%% **\n", prob_stayer);
+    printf("** The probability to win with door change is: %f%% **\n", prob_changer);
 
     printf("The prediction for the Changer is: %f\nSimulation error: %f\n", predicted_for_changer,
     predicted_for_changer - prob_changer);

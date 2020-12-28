@@ -24,16 +24,8 @@ MontyCalcRet monty_calculate_winning_chance(MontyParameters *params){
         return ret;
     }
 
-    size_t total_wins_changer = 0;
-    size_t total_wins_stayer = 0;
-
-    size_t loop_count = params->loops;
-
-    params->loops_done = 0;
-
-    while ( loop_count ) {
-        params->loops_done += 1;
-
+    while ( params->loops ) {
+        params->loops--;
         // Setup initial winning and selected positions
         size_t index_price = rand_r(&seed_d) % params->doors;
         size_t index_stayer = rand_r(&seed_d) % params->doors;
@@ -73,17 +65,13 @@ MontyCalcRet monty_calculate_winning_chance(MontyParameters *params){
 
 
         if (index_changer == index_price) {
-            total_wins_changer++;
+            params->ret.total_wins_changer++;
         } 
         if (index_stayer == index_price) {
-            total_wins_stayer++;
+            params->ret.total_wins_stayer++;
         }
 
-        loop_count--;
     }
-
-    params->ret.total_wins_changer = total_wins_changer;
-    params->ret.total_wins_stayer = total_wins_stayer;
 
     free(door_array);
 
