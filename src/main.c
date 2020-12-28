@@ -61,7 +61,7 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
     }
 
 
-    printf("Using: \n\tLoops: %ld\n\tDoors: %ld\n\tReveal: %ld\n\n", loops, doors, reveal);
+    printf("Using: \n\tLoops: %lu\n\tDoors: %lu\n\tReveal: %lu\n\n", loops, doors, reveal);
     // All arguments are ok for this program
 
     // Start interactive mode and exit

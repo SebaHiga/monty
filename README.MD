@@ -29,6 +29,13 @@ $ cmake .. && make
 ```sh
 $ docker build -t monty .
 ```
+# Load it! (with docker)
+
+If the saved docker image is around here, you can load it using. It's only ~5MB!!
+```sh
+$ docker load < wazuh-monty.tar
+```
+
 
 # Usage
 You can play with the executable with the following parameters:
@@ -47,9 +54,9 @@ $ ./monty --loops 20000 --doors 100 --reveal 40 --threads 2
 With the docker image the parameters are already defined in the dockerfile. To execute it you can do:
 
 ```sh
-$ docker run -it wazuh ./monty --loops 5000000 --doors 100 --reveal 98 --threads 4
+$ docker run -it wazuh-monty ./monty --loops 5000000 --doors 100 --reveal 98 --threads 4
 ```
-
+```sh
  __________ 	 __________ 	 __________ 	
 ||         |	||         |	|  __  __  |	
 ||         |	||         |	| |  ||  | |	
@@ -62,7 +69,7 @@ $ docker run -it wazuh ./monty --loops 5000000 --doors 100 --reveal 98 --threads
 ||         |	||         |	| |  ||  | |	
 ||         |	||         |	| |__||__| |	
 ||_________|	||_________|	|__________|	
-
+```
 # Play it!
 
 Play the Monty Hall game as you were in television with the flag **--interactive**.
@@ -80,9 +87,9 @@ $ ./monty --interactive 1 --doors 3 --reveal 1
 ## Playing with docker
 To play this game with docker just run the following command after builing the image.
 ```sh
-$ docker run -it wazuh
+$ docker run -it wazuh-monty
 ```
 ### With custom scenario:
 ```sh
-$ docker run -it wazuh ./monty --interactive 1 --doors 4 --reveal 1
+$ docker run -it wazuh-monty ./monty --interactive 1 --doors 4 --reveal 1
 ```
