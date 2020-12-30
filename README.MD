@@ -34,7 +34,7 @@ If the saved docker image is around here, you can load it using. It's only ~5MB!
 ```sh
 $ docker load < monty.tar
 ```
-##Pull it from Docker Hub
+## Pull it from Docker Hub
 ```sh
 $ docker pull sebhig/monty
 ```
