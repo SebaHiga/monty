@@ -22,23 +22,30 @@ void start_monty_game(const size_t doors, const size_t reveal _MAYBE_UNUSED_){
         return;
     }
 
+    // Get random host behaviour and the random door for the price
     host_behaviour host = rand() % MONTY_BEHAVIOUR_TOTAL;
     size_t index_price = rand() % doors;
 
     arr_doors[index_price] = MONTY_HAS_PRICE;
 
+    // Print stage!
     printf("%s", ascii_monty_title);
     print_ascii_doors(arr_doors, doors);
 
+    // Read user input and save it
     size_t index_selected = get_door_from_user(arr_doors, doors);
 
+    // Set the door as a selected one
     if (index_selected != index_price){
         arr_doors[index_selected] = MONTY_IS_SELECTED;
     }
 
+    // This functions does the interaction between the user and the host
     host_interact_post_select(host, arr_doors, doors, reveal, index_selected, index_price);
 
     free(arr_doors);
+
+    // Print the host type
     print_monty_host_type(host);
 }
 

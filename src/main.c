@@ -81,7 +81,9 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
         printf("ERROR: no memory left to allocate parameters\n");
         return EXIT_FAILURE;
     }
+
     if (arr_threads == NULL){
+        free(arr_params);
         printf("ERROR: no memory left to allocate threads\n");
         return EXIT_FAILURE;
     }
@@ -93,8 +95,11 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
         arr_params[i].doors = doors;
         arr_params[i].reveal = reveal;
         arr_params[i].loops = loop_divided;
+
+        // Give a random seed for each thread
         arr_params[i].seed = rand();
 
+        // Launch thread
         pthread_create(arr_threads + i, NULL, monty_calculate_thread, (void *) (arr_params + i));
     }
 
@@ -125,6 +130,7 @@ int main(int argc _MAYBE_UNUSED_, const char *argv[] _MAYBE_UNUSED_){
         total_winners_stayer += arr_params[i].ret.total_wins_stayer;
     }
 
+    // Calculate probabilities using 100% base
     double prob_changer = ((double) total_winners_changer / loops) * 100;
     double prob_stayer = ((double) total_winners_stayer / loops) * 100;
     double predicted_for_changer = ((double) (doors - 1) / (doors * (doors - reveal - 1))) * 100;

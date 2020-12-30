@@ -29,18 +29,30 @@ typedef enum {
 /* It starts the monty game */
 void start_monty_game(const size_t doors, const size_t reveal);
 
-/* This function should be run after the user selects a door */
+/* 
+This function should be run after the user selects a door 
+The behaviour of the host is randomized and each one is more friendly or a total nightmare
+This should be executed once
+*/
 void host_interact_post_select(host_behaviour host, int *arr_doors, const size_t doors, const size_t reveal, const size_t selected, const size_t price);
 
-/* Reveal doors with the amount of doors to reveal on arguments */
+/* 
+    Reveal doors with the amount of doors to reveal on arguments
+    It only reveals doors that are not the selected one neither has the price behind it
+*/
 void host_reveal_doors(int *arr_doors, const size_t doors, const size_t reveal);
 
-/* Read input from user, the return is the index of the selected door */
+/* 
+    Read input from user, the return is the index of the selected door 
+    It also does some basic check to validate user's input
+*/
 size_t get_door_from_user(int *arr_doors, const size_t doors);
 
-/* Ask the user to switch doors, the return type is whether the user agrees to switch or not */
+/* 
+    Ask the user to switch doors, the return type is whether the user agrees to switch or not 
+    It also does some basic validations from the user
+*/
 bool ask_to_switch_doors();
-
 
 /* This function prints the host type on console */
 void print_monty_host_type(const host_behaviour host);
